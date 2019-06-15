@@ -1,5 +1,6 @@
 package com.example.listview;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,24 +23,58 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
     ListView listView;
-    ArrayAdapter<String> adapter;
-    ArrayList<String> arrayList;
-    EditText editText;
+    ArticleAdapter adapter;
+    ArrayList<Article> articleList;
+    EditText nameListTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Ma liste de courses");
+
         setSupportActionBar(toolbar);
 
-     listView=(ListView) findViewById(R.id.ListView);
-     String[] android_flavours = {"Banane", "Fraise", "Ananas"};
-     arrayList= new ArrayList<>(Arrays.asList(android_flavours));
-     adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, arrayList);
-     listView.setAdapter(adapter);
+        listView = (ListView) findViewById(R.id.ListView);
+        articleList = new ArrayList<>();
+        articleList.add(new Article("Banane"));
+        articleList.add(new Article("Fraise"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        articleList.add(new Article("Ananas"));
+        adapter = new ArticleAdapter(articleList, getApplicationContext());
+        listView.setAdapter(adapter);
+        nameListTxt = (EditText) findViewById(R.id.nameListTxt);
 
-     editText = (EditText) findViewById(R.id.edittxt);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {/*
+                ListView lv = (ListView) parent;
+
+                TextView row = (TextView)lv.getItemAtPosition(position);
+                row.setPaintFlags(row.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);*/
+                Snackbar.make(view, "Test  " +position, Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+/*     editText = (EditText) findViewById(R.id.edittxt);
      Button btnAdd = (Button) findViewById(R.id.additems);
      btnAdd.setOnClickListener(new View.OnClickListener() {
          @Override
@@ -49,21 +85,7 @@ public class MainActivity extends AppCompatActivity {
              Toast.makeText(getBaseContext(), "Item added in list", Toast.LENGTH_SHORT).show();
 
          }
-     });
-
-
-     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-         @Override
-         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-             Toast.makeText(getBaseContext(), parent.getItemAtPosition(position) + "is selected", Toast.LENGTH_SHORT).show();
-
-         }
-     });
-
-
-
-
-
+     });*/
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
