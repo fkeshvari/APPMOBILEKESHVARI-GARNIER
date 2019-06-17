@@ -2,7 +2,9 @@ package com.example.listview;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -15,7 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ArticleAdapter extends ArrayAdapter<Article> implements View.OnClickListener {
+public class ArticleAdapter extends ArrayAdapter<Article>{
 
 
     private ArrayList<Article> dataSet;
@@ -35,11 +37,6 @@ public class ArticleAdapter extends ArrayAdapter<Article> implements View.OnClic
 
     }
 
-    @Override
-    public void onClick(View v) {
-
-
-    }
 
     private int lastPosition = -1;
 
@@ -68,8 +65,15 @@ public class ArticleAdapter extends ArrayAdapter<Article> implements View.OnClic
             viewHolder = (ViewHolder) convertView.getTag();
             result = convertView;
         }
-        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-        result.startAnimation(animation);
+        Log.d("show",""+position);
+        if(position == 0){
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.up_from_bottom_low);
+            //result.startAnimation(animation);
+        }else{
+            Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition ? R.anim.up_from_bottom : R.anim.down_from_top));
+            result.startAnimation(animation);
+        }
+
         lastPosition = position;
         viewHolder.txtName.setText(article.getName());
         viewHolder.txtQte.setText(String.valueOf(article.getQte())+" ");
@@ -87,7 +91,8 @@ public class ArticleAdapter extends ArrayAdapter<Article> implements View.OnClic
                 if(!article.isChecked()) {
                     strikeArticle(viewHolder, true);
                     article.setChecked(true);
-                    dataSet.set(position, article);
+                    removeListItem(result, article);
+                    //dataSet.set(position, article);
                 }else{
                     strikeArticle(viewHolder, false);
                     article.setChecked(false);
@@ -101,14 +106,34 @@ public class ArticleAdapter extends ArrayAdapter<Article> implements View.OnClic
         // Return the completed view to render on screen
         return convertView;
     }
+    protected void removeListItem(View rowView, final Article article) {
+        // TODO Auto-generated method stub
+
+        final Animation animation = AnimationUtils.loadAnimation(rowView.getContext(), R.anim.splashfadeout);
+        rowView.startAnimation(animation);
+        Handler handle = new Handler();
+        handle.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                dataSet.remove(article);
+                dataSet.add(article);
+                notifyDataSetChanged();
+                animation.cancel();
+            }
+        }, 1000);
+    }
 
     void strikeArticle(ViewHolder viewHolder, boolean strike){
         if(strike){
             viewHolder.txtName.setPaintFlags(viewHolder.txtName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             viewHolder.txtQte.setPaintFlags(viewHolder.txtQte.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            viewHolder.validateImg.setImageResource(R.drawable.baseline_undo_black_24);
         }else{
             viewHolder.txtName.setPaintFlags(viewHolder.txtName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             viewHolder.txtQte.setPaintFlags(viewHolder.txtQte.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            viewHolder.validateImg.setImageResource(R.drawable.baseline_done_black_24);
         }
     }
 }

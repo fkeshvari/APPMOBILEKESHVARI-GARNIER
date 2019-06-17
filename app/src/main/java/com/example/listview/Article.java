@@ -1,7 +1,9 @@
 package com.example.listview;
 
 
-public class Article {
+import java.io.Serializable;
+
+public class Article implements Serializable {
 
     private String name;
     private int measure;

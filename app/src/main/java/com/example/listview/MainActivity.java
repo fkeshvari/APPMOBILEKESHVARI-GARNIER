@@ -1,7 +1,10 @@
 package com.example.listview;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,19 +28,22 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     ArticleAdapter adapter;
     ArrayList<Article> articleList;
+    ArrayList<Article> articleList2;
+    ArrayList<Shop> shopList;
     EditText nameListTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Ma liste de courses");
 
         setSupportActionBar(toolbar);
 
         listView = (ListView) findViewById(R.id.ListView);
         articleList = new ArrayList<>();
+        articleList2 = new ArrayList<>();
         articleList.add(new Article("Banane"));
         articleList.add(new Article("Fraise"));
         articleList.add(new Article("Ananas"));
@@ -59,9 +65,15 @@ public class MainActivity extends AppCompatActivity {
         articleList.add(new Article("Ananas"));
         articleList.add(new Article("Ananas"));
         articleList.add(new Article("Ananas"));
+        articleList2.add(new Article("Avion"));
+        shopList = new ArrayList<Shop>();
+        nameListTxt = (EditText) findViewById(R.id.nameListTxt);
+
+        shopList.add(new Shop(nameListTxt.getText().toString(), articleList));
+        shopList.add(new Shop("Lowl", articleList2));
         adapter = new ArticleAdapter(articleList, getApplicationContext());
         listView.setAdapter(adapter);
-        nameListTxt = (EditText) findViewById(R.id.nameListTxt);
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -70,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
                 TextView row = (TextView)lv.getItemAtPosition(position);
                 row.setPaintFlags(row.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);*/
-                Snackbar.make(view, "Test  " +position, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, "Test  " + position, Snackbar.LENGTH_LONG).show();
+
             }
         });
 
@@ -87,14 +100,52 @@ public class MainActivity extends AppCompatActivity {
          }
      });*/
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        FloatingActionButton otherListFAB = findViewById(R.id.otherListFAB);
+        otherListFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Intent i = new Intent(MainActivity.this, ShowShops.class);
+                i.putExtra("shopList", shopList);
+                startActivityForResult(i, 1);
+            }
+        });
+
+        FloatingActionButton editFAB = findViewById(R.id.editFAB);
+        editFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Show other lists", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
+
+
+        FloatingActionButton toPDFFAB = findViewById(R.id.toPDFFAB);
+        toPDFFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Share as PDF", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                Shop shop = (Shop) data.getSerializableExtra("currentShop");
+                ArticleAdapter articleAdapter = new ArticleAdapter(shop.getArticleList(), getApplicationContext());
+                listView.setAdapter(articleAdapter);
+                nameListTxt.setText(shop.getName());
+
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+
     }
 
     @Override
