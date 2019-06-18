@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,22 +14,18 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.listview.adapters.ArticleAdapter;
+import com.example.listview.models.Article;
+import com.example.listview.models.Shop;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,6 +65,19 @@ public class MainActivity extends AppCompatActivity {
             articleList2 = new ArrayList<>();
             articleList.add(new Article("Banane"));
             articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Fraise"));
             articleList.add(new Article("Ananas"));
             articleList2.add(new Article("Avion"));
             shopList.add(new Shop(nameListTxt.getText().toString(), articleList));
@@ -100,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         otherListFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, ShowShops.class);
+                Intent i = new Intent(MainActivity.this, ShopListActivity.class);
                 i.putExtra("shopList", shopList);
                 startActivityForResult(i, 1);
             }
@@ -112,6 +119,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Show other lists", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                Intent i = new Intent(MainActivity.this, EditActivity.class);
+                i.putExtra("currentShop", currentShop);
+                i.putExtra("position", shopList.indexOf(currentShop));
+                startActivityForResult(i, 2);
             }
         });
 
@@ -128,6 +139,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                Shop shop = (Shop) data.getSerializableExtra("currentShop");
+                int position = data.getIntExtra("position", -1);
+                adapter = new ArticleAdapter(shop.getArticleList(), getApplicationContext());
+                listView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                currentShop = shop;
+                shopList.set(position, shop);
+                nameListTxt.setText(shop.getName());
+
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+                Log.d("Test", "RESUSLT_CANCELED");
+            }
+        }else if (requestCode == 2) {
             if (resultCode == Activity.RESULT_OK) {
                 Shop shop = (Shop) data.getSerializableExtra("currentShop");
                 int position = data.getIntExtra("position", -1);

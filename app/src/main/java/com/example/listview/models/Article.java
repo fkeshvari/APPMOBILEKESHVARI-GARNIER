@@ -1,4 +1,4 @@
-package com.example.listview;
+package com.example.listview.models;
 
 
 import java.io.Serializable;

@@ -1,4 +1,6 @@
-package com.example.listview;
+package com.example.listview.models;
+
+import com.example.listview.models.Article;
 
 import java.io.Serializable;
 import java.util.ArrayList;
