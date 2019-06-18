@@ -18,13 +18,12 @@
         app:layout_constraintEnd_toStartOf="@+id/txtMeasure"
         tools:textStyle="bold" />
 
-    <TextView
+    <Spinner
         android:id="@+id/txtMeasure"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="gr"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editTxtName"

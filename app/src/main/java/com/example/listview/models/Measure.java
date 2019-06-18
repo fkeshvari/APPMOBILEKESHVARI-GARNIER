@@ -10,26 +10,26 @@ public class Measure {
     public static final int MG = 6;
     public static final int KG = 7;
 
-    public static String getString(int measure) {
+    public static int getInt(String measure) {
         switch (measure) {
-            case NOTYPE:
-                return "-";
-            case L:
-                return "L";
-            case DL:
-                return "dL";
-            case CL:
-                return "cL";
-            case ML:
-                return "mL";
-            case G:
-                return "g";
-            case MG:
-                return "mg";
-            case KG:
-                return "kg";
+            case "-":
+                return 0;
+            case "L":
+                return 1;
+            case "dL":
+                return 2;
+            case "cL":
+                return 3;
+            case "mL":
+                return 4;
+            case "g":
+                return 5;
+            case "mg":
+                return 6;
+            case "kg":
+                return 7;
             default:
-                return "";
+                return -1;
         }
     }
 }

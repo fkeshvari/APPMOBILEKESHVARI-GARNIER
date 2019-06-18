@@ -28,6 +28,7 @@ public class ArticleAdapter extends ArrayAdapter<Article>{
     // View lookup cache
     private static class ViewHolder {
         TextView txtName;
+        TextView txtMeasure;
         TextView txtQte;
         ImageView validateImg;
     }
@@ -57,6 +58,7 @@ public class ArticleAdapter extends ArrayAdapter<Article>{
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.row_item, parent, false);
             viewHolder.txtName = (TextView) convertView.findViewById(R.id.txtName);
+            viewHolder.txtMeasure = convertView.findViewById(R.id.txtMeasure);
             viewHolder.txtQte = (TextView) convertView.findViewById(R.id.txtQte);
             viewHolder.validateImg = (ImageView) convertView.findViewById(R.id.validateImg);
 
@@ -78,7 +80,8 @@ public class ArticleAdapter extends ArrayAdapter<Article>{
 
         lastPosition = position;
         viewHolder.txtName.setText(article.getName());
-        viewHolder.txtQte.setText(String.valueOf(article.getQte())+" ");
+        viewHolder.txtQte.setText(String.valueOf(article.getQte()));
+        viewHolder.txtMeasure.setText(article.getMeasure().equals("-") ? " " : article.getMeasure()+" de ");
 
         if(article.isChecked()){
             strikeArticle(viewHolder, true);

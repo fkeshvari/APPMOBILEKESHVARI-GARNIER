@@ -9,10 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.listview.R;
@@ -31,7 +33,7 @@ public class EditArticleAdapter extends ArrayAdapter<Article>{
     // View lookup cache
     private static class ViewHolder {
         EditText editTxtQte;
-        TextView txtMeasure;
+        Spinner txtMeasure;
         EditText editTxtName;
         ImageButton deleteBtn;
     }
@@ -42,7 +44,6 @@ public class EditArticleAdapter extends ArrayAdapter<Article>{
         this.mContext = context;
 
     }
-
 
     private int lastPosition = -1;
 
@@ -101,7 +102,23 @@ public class EditArticleAdapter extends ArrayAdapter<Article>{
                 }
             }
         });
-        viewHolder.txtMeasure.setText(Measure.getString(article.getMeasure()));
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext, R.array.measure_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        viewHolder.txtMeasure.setAdapter(adapter);
+        viewHolder.txtMeasure.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("Test",parent.getItemAtPosition(position).toString());
+                String measure = parent.getItemAtPosition(position).toString();
+                article.setMeasure(measure);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        viewHolder.txtMeasure.setSelection(Measure.getInt(article.getMeasure()));
         viewHolder.editTxtName.setText(article.getName());
         viewHolder.editTxtName.addTextChangedListener(new TextWatcher() {
             @Override

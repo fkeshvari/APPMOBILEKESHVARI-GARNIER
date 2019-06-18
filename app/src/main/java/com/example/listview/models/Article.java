@@ -6,11 +6,11 @@ import java.io.Serializable;
 public class Article implements Serializable {
 
     private String name;
-    private int measure;
+    private String measure;
     private int qte;
     private boolean checked;
 
-    public Article(String name, int measure, int qte){
+    public Article(String name, String measure, int qte){
         this.name = name;
         this.measure = measure;
         this.qte = qte;
@@ -18,7 +18,7 @@ public class Article implements Serializable {
 
     public Article(String name){
         this.name = name;
-        this.measure = Measure.NOTYPE;
+        this.measure = "-";
         this.qte = 1;
 
     }
@@ -31,11 +31,11 @@ public class Article implements Serializable {
         this.name = name;
     }
 
-    public int getMeasure() {
+    public String getMeasure() {
         return measure;
     }
 
-    public void setMeasure(int measure) {
+    public void setMeasure(String measure) {
         this.measure = measure;
     }
 
