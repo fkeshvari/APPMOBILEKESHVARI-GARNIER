@@ -1,17 +1,23 @@
 package com.example.listview;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,6 +26,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -31,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Article> articleList2;
     ArrayList<Shop> shopList;
     EditText nameListTxt;
+    Shop currentShop;
+    SharedPreferences sP;
+    SharedPreferences.Editor sPEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,68 +51,50 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Ma liste de courses");
+        sP = getSharedPreferences("SP", Context.MODE_PRIVATE);
 
         setSupportActionBar(toolbar);
 
         listView = (ListView) findViewById(R.id.ListView);
-        articleList = new ArrayList<>();
-        articleList2 = new ArrayList<>();
-        articleList.add(new Article("Banane"));
-        articleList.add(new Article("Fraise"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList.add(new Article("Ananas"));
-        articleList2.add(new Article("Avion"));
-        shopList = new ArrayList<Shop>();
         nameListTxt = (EditText) findViewById(R.id.nameListTxt);
 
-        shopList.add(new Shop(nameListTxt.getText().toString(), articleList));
-        shopList.add(new Shop("Lowl", articleList2));
-        adapter = new ArticleAdapter(articleList, getApplicationContext());
-        listView.setAdapter(adapter);
+        Gson gson = new Gson();
+        String json = sP.getString("shopList", "");
+        if (json != null && !json.equals("")) {
+            Type type = new TypeToken<ArrayList<Shop>>() {
+            }.getType();
+            shopList = gson.fromJson(json, type);
+            currentShop = shopList.get(0);
+        } else {
+            shopList = new ArrayList<Shop>();
+            articleList = new ArrayList<>();
+            articleList2 = new ArrayList<>();
+            articleList.add(new Article("Banane"));
+            articleList.add(new Article("Fraise"));
+            articleList.add(new Article("Ananas"));
+            articleList2.add(new Article("Avion"));
+            shopList.add(new Shop(nameListTxt.getText().toString(), articleList));
+            shopList.add(new Shop("Lowl", articleList2));
+            currentShop = shopList.get(0);
+        }
 
+        adapter = new ArticleAdapter(currentShop.getArticleList(), getApplicationContext());
+        listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {/*
-                ListView lv = (ListView) parent;
-
-                TextView row = (TextView)lv.getItemAtPosition(position);
-                row.setPaintFlags(row.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);*/
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("Test", currentShop.getArticleList().get(position).getName());
                 Snackbar.make(view, "Test  " + position, Snackbar.LENGTH_LONG).show();
+                Article a = currentShop.getArticleList().get(position);
+                if (!a.isChecked())
+                    a.setChecked(true);
+                else
+                    a.setChecked(false);
+                adapter.notifyDataSetChanged();
 
             }
         });
-
-/*     editText = (EditText) findViewById(R.id.edittxt);
-     Button btnAdd = (Button) findViewById(R.id.additems);
-     btnAdd.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-             String additem = editText.getText().toString();
-             arrayList.add(additem);
-             adapter.notifyDataSetChanged();
-             Toast.makeText(getBaseContext(), "Item added in list", Toast.LENGTH_SHORT).show();
-
-         }
-     });*/
-
 
         FloatingActionButton otherListFAB = findViewById(R.id.otherListFAB);
         otherListFAB.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         FloatingActionButton toPDFFAB = findViewById(R.id.toPDFFAB);
         toPDFFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,13 +130,18 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 Shop shop = (Shop) data.getSerializableExtra("currentShop");
-                ArticleAdapter articleAdapter = new ArticleAdapter(shop.getArticleList(), getApplicationContext());
-                listView.setAdapter(articleAdapter);
+                int position = data.getIntExtra("position", -1);
+                adapter = new ArticleAdapter(shop.getArticleList(), getApplicationContext());
+                listView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                currentShop = shop;
+                shopList.set(position, shop);
                 nameListTxt.setText(shop.getName());
 
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
+                Log.d("Test", "RESUSLT_CANCELED");
             }
         }
 
@@ -168,5 +167,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("Test", "onPause");
+        if (sP == null)
+            sP = getApplicationContext().getSharedPreferences("SP", Context.MODE_PRIVATE);
+        sPEditor = sP.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(shopList);
+        sPEditor.putString("shopList", json);
+        sPEditor.apply();
+        Log.d("Test", "saved");
     }
 }

@@ -83,49 +83,25 @@ public class ArticleAdapter extends ArrayAdapter<Article>{
         }else{
             strikeArticle(viewHolder, false);
         }
-        viewHolder.validateImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = (Integer) v.getTag();
-                Article article = getItem(position);
-                if(!article.isChecked()) {
-                    strikeArticle(viewHolder, true);
-                    article.setChecked(true);
-                    removeListItem(result, article);
-                    //dataSet.set(position, article);
-                }else{
-                    strikeArticle(viewHolder, false);
-                    article.setChecked(false);
-                    dataSet.set(position, article);
-                }
-                Snackbar.make(v, "Nom de l'article " + article.getName(), Snackbar.LENGTH_LONG)
-                        .setAction("No action", null).show();
-            }
-        });
         viewHolder.validateImg.setTag(position);
         // Return the completed view to render on screen
         return convertView;
     }
-    protected void removeListItem(View rowView, final Article article) {
+    protected void removeAnimation(View rowView) {
         // TODO Auto-generated method stub
 
         final Animation animation = AnimationUtils.loadAnimation(rowView.getContext(), R.anim.splashfadeout);
         rowView.startAnimation(animation);
         Handler handle = new Handler();
         handle.postDelayed(new Runnable() {
-
             @Override
             public void run() {
-                // TODO Auto-generated method stub
-                dataSet.remove(article);
-                dataSet.add(article);
-                notifyDataSetChanged();
                 animation.cancel();
             }
         }, 1000);
     }
 
-    void strikeArticle(ViewHolder viewHolder, boolean strike){
+    private void strikeArticle(ViewHolder viewHolder, boolean strike){
         if(strike){
             viewHolder.txtName.setPaintFlags(viewHolder.txtName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             viewHolder.txtQte.setPaintFlags(viewHolder.txtQte.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);

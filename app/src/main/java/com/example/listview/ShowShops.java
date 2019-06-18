@@ -36,6 +36,7 @@ public class ShowShops extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent i = new Intent(ShowShops.this, MainActivity.class);
                     i.putExtra("currentShop",shopList.get(position));
+                    i.putExtra("position", position);
                     setResult(Activity.RESULT_OK, i);
                     finish();
                 }

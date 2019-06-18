@@ -61,7 +61,7 @@ public class ShopAdapter extends ArrayAdapter<Shop>{
             viewHolder = (ViewHolder) convertView.getTag();
             result = convertView;
         }
-        Log.d("show",""+position);
+        Log.d("showSA",""+position);
         if(position == 0){
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.up_from_bottom_low);
             //result.startAnimation(animation);
