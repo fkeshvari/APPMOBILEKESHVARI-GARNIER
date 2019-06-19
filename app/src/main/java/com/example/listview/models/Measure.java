@@ -1,5 +1,8 @@
 package com.example.listview.models;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Measure {
     public static final int NOTYPE = 0;
     public static final int L = 1;
@@ -9,6 +12,7 @@ public class Measure {
     public static final int G = 5;
     public static final int MG = 6;
     public static final int KG = 7;
+    public static ArrayList<String> measures = new ArrayList<String>(Arrays.asList("L", "dL", "cL", "mL", "g", "mg", "kg"));
 
     public static int getInt(String measure) {
         switch (measure) {
@@ -31,5 +35,14 @@ public class Measure {
             default:
                 return -1;
         }
+    }
+
+    public static String parseMeasureAPI(String s){
+        for (String measure :measures) {
+            if (s.contains(" "+measure)){
+                return measure;
+            }
+        }
+        return null;
     }
 }

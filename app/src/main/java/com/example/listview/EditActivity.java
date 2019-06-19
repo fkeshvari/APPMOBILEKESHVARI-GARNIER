@@ -26,6 +26,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.listview.adapters.EditArticleAdapter;
 import com.example.listview.models.Article;
+import com.example.listview.models.Measure;
 import com.example.listview.models.Shop;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
@@ -105,7 +106,15 @@ public class EditActivity extends AppCompatActivity {
                             public void onResponse(String response) {
                                 // Display the first 500 characters of the response string.
                                 JsonObject jsonObject = gson.fromJson(response, JsonObject.class);
-                                Log.d("Response is: ", jsonObject.getAsJsonObject("product").get("generic_name_fr").toString());
+                                String name = jsonObject.getAsJsonObject("product").get("generic_name_fr").toString();
+                                String quantity = jsonObject.getAsJsonObject("product").get("quantity").toString();
+                                String measure = Measure.parseMeasureAPI(quantity);
+                                int product_quantity = Integer.valueOf(jsonObject.getAsJsonObject("product").get("product_quantity").toString());
+                                Log.d("Response is: ", name);
+                                Log.d("Response is: ", measure);
+                                Log.d("Response is: ", product_quantity+"");
+                                currentShop.getArticleList().add(new Article(name, measure, product_quantity));
+                                adapter.notifyDataSetChanged();
                             }
                         }, new Response.ErrorListener() {
                     @Override
