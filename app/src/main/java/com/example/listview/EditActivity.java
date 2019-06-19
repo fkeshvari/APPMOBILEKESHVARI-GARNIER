@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.listview.adapters.EditArticleAdapter;
@@ -20,6 +21,7 @@ public class EditActivity extends AppCompatActivity {
     Button manualBtn;
     Button cameraBtn;
     Shop currentShop;
+    EditText editTxtnameList;
     int position;
 
     @Override
@@ -29,6 +31,7 @@ public class EditActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
         manualBtn = findViewById(R.id.manualBtn);
         getSupportActionBar().setTitle("Mode Édition");
+        editTxtnameList = findViewById(R.id.editTxtnameList);
         manualBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,6 +40,7 @@ public class EditActivity extends AppCompatActivity {
         });
         currentShop = (Shop) getIntent().getSerializableExtra("currentShop");
         position = getIntent().getIntExtra("position", -1);
+        editTxtnameList.setText(currentShop.getName());
         adapter = new EditArticleAdapter(currentShop.getArticleList(), getApplicationContext());
         listView.setAdapter(adapter);
     }
@@ -59,6 +63,7 @@ public class EditActivity extends AppCompatActivity {
         if (id == R.id.action_save) {
             adapter.notifyDataSetChanged();
             Intent i = new Intent(EditActivity.this, MainActivity.class);
+            currentShop.setName(editTxtnameList.getText().toString());
             i.putExtra("currentShop",currentShop);
             i.putExtra("position", position);
             setResult(Activity.RESULT_OK, i);

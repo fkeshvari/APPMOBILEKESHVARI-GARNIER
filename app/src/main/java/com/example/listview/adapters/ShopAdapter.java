@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.listview.R;
@@ -24,7 +25,7 @@ public class ShopAdapter extends ArrayAdapter<Shop>{
     // View lookup cache
     private static class ViewHolder {
         TextView txtName;
-        boolean isSelected;
+        ImageView isSelected;
     }
 
     public ShopAdapter(ArrayList<Shop> data, Context context) {
@@ -52,6 +53,7 @@ public class ShopAdapter extends ArrayAdapter<Shop>{
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.shop_item, parent, false);
             viewHolder.txtName = (TextView) convertView.findViewById(R.id.txtName);
+            viewHolder.isSelected = convertView.findViewById(R.id.isSelected);
 
             result = convertView;
 
@@ -70,8 +72,11 @@ public class ShopAdapter extends ArrayAdapter<Shop>{
         }
 
         viewHolder.txtName.setText(shop.getName());
+        if(!shop.isSelected())
+            viewHolder.isSelected.setVisibility(View.GONE);
         // Return the completed view to render on screen
         return convertView;
     }
+
 
 }

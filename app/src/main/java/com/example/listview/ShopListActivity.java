@@ -20,6 +20,7 @@ public class ShopListActivity extends AppCompatActivity {
     ShopAdapter shopAdapter;
     ArrayList<Shop> shopList;
     ListView listView;
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +31,20 @@ public class ShopListActivity extends AppCompatActivity {
         if (getIntent().getSerializableExtra("shopList") instanceof ArrayList){
             shopList = (ArrayList<Shop>) getIntent().getSerializableExtra("shopList");
         }
+        position = getIntent().getIntExtra("position", -1);
         Log.d("test", shopList.toString());
+
         if(shopList!=null){
+            for(int i = 0; i<shopList.size(); i++){
+                if(shopList.get(i).isSelected()) {
+                    Shop st = shopList.get(i);
+                    st.setSelected(false);
+                    shopList.set(i, st);
+                }
+            }
+            Shop shop = shopList.get(position);
+            shop.setSelected(true);
+            shopList.set(position, shop);
             shopAdapter = new ShopAdapter(shopList, getApplicationContext());
             listView.setAdapter(shopAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

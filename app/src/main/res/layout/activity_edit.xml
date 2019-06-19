@@ -8,11 +8,10 @@
     tools:context=".EditActivity">
 
     <EditText
-        android:id="@+id/nameListTxt"
+        android:id="@+id/editTxtnameList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:enabled="false"
         android:inputType="text"
         android:text="Liste de courses 1"
         android:textColor="@color/black"
@@ -30,7 +29,7 @@
         android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameListTxt" />
+        app:layout_constraintTop_toBottomOf="@+id/editTxtnameList" />
 
     <TextView
         android:id="@+id/textView"

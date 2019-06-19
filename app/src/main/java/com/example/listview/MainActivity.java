@@ -15,8 +15,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.listview.adapters.ArticleAdapter;
 import com.example.listview.models.Article;
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Article> articleList;
     ArrayList<Article> articleList2;
     ArrayList<Shop> shopList;
-    EditText nameListTxt;
+    Button nameListBtn;
     Shop currentShop;
     SharedPreferences sP;
     SharedPreferences.Editor sPEditor;
@@ -45,12 +47,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Ma liste de courses");
+        toolbar.setLogo(R.drawable.baseline_shopping_cart_white_24);
         sP = getSharedPreferences("SP", Context.MODE_PRIVATE);
 
         setSupportActionBar(toolbar);
 
-        listView = (ListView) findViewById(R.id.ListView);
-        nameListTxt = (EditText) findViewById(R.id.nameListTxt);
+        listView =  findViewById(R.id.ListView);
+        nameListBtn = findViewById(R.id.nameListTxt);
 
         Gson gson = new Gson();
         String json = sP.getString("shopList", "");
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             articleList.add(new Article("Fraise"));
             articleList.add(new Article("Ananas"));
             articleList2.add(new Article("Avion"));
-            shopList.add(new Shop(nameListTxt.getText().toString(), articleList));
+            shopList.add(new Shop(nameListBtn.getText().toString(), articleList));
             shopList.add(new Shop("Lowl", articleList2));
             currentShop = shopList.get(0);
         }
@@ -103,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton otherListFAB = findViewById(R.id.otherListFAB);
-        otherListFAB.setOnClickListener(new View.OnClickListener() {
+        nameListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, ShopListActivity.class);
                 i.putExtra("shopList", shopList);
+                i.putExtra("position", shopList.indexOf(currentShop));
                 startActivityForResult(i, 1);
             }
         });
@@ -147,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 currentShop = shop;
                 shopList.set(position, shop);
-                nameListTxt.setText(shop.getName());
+                nameListBtn.setText(shop.getName());
 
             }
             if (resultCode == Activity.RESULT_CANCELED) {
@@ -163,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 currentShop = shop;
                 shopList.set(position, shop);
-                nameListTxt.setText(shop.getName());
+                nameListBtn.setText(shop.getName());
 
             }
             if (resultCode == Activity.RESULT_CANCELED) {

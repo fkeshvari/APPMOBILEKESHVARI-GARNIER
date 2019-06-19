@@ -11,6 +11,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -81,7 +83,7 @@ public class ArticleAdapter extends ArrayAdapter<Article>{
         lastPosition = position;
         viewHolder.txtName.setText(article.getName());
         viewHolder.txtQte.setText(String.valueOf(article.getQte()));
-        viewHolder.txtMeasure.setText(article.getMeasure().equals("-") ? " " : article.getMeasure()+" de ");
+        viewHolder.txtMeasure.setText(article.getMeasure().equals("-") ? " " : article.getMeasure()+deOrNot(article.getName()));
 
         if(article.isChecked()){
             strikeArticle(viewHolder, true);
@@ -116,5 +118,13 @@ public class ArticleAdapter extends ArrayAdapter<Article>{
             viewHolder.txtQte.setPaintFlags(viewHolder.txtQte.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             viewHolder.validateImg.setImageResource(R.drawable.baseline_done_black_24);
         }
+    }
+
+    public static String deOrNot(String s){
+        Pattern p = Pattern.compile("^[aeiohu].*", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = p.matcher(s);
+        if(matcher.matches())
+            return " d'";
+        else return " de ";
     }
 }
