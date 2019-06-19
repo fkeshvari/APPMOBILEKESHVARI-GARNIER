@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         toPDFFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Share as PDF", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                Snackbar.make(view, "Share as PDF", Snackbar.LENGTH_LONG).show();
             }
         });
     }

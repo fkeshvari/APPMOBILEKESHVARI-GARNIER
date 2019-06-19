@@ -1,8 +1,13 @@
 package com.example.listview;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,9 +18,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.listview.adapters.EditArticleAdapter;
 import com.example.listview.models.Article;
 import com.example.listview.models.Shop;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -34,14 +48,26 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
         listView = findViewById(R.id.listView);
         manualBtn = findViewById(R.id.manualBtn);
+        cameraBtn = findViewById(R.id.cameraBtn);
         getSupportActionBar().setTitle("Mode Édition");
         editTxtnameList = findViewById(R.id.editTxtnameList);
+        Gson gson = new Gson();
         canSave = true;
         manualBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(EditActivity.this, ManualNewArticle.class);
                 startActivityForResult(i, 1);
+            }
+        });
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 200);
+        }
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(EditActivity.this, CameraNewArticle.class);
+                startActivityForResult(i, 2);
             }
         });
         currentShop = (Shop) getIntent().getSerializableExtra("currentShop");
@@ -53,13 +79,44 @@ public class EditActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        final Gson gson = new Gson();
         if (requestCode == 1) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK &&  data!=null) {
                 Article article = (Article) data.getSerializableExtra("newArticle");
                 if(article!=null){
                     currentShop.getArticleList().add(article);
                     adapter.notifyDataSetChanged();
                 }
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+                Log.d("Test", "RESULT_CANCELED_EDIT");
+            }
+        }else if (requestCode == 2){
+            Log.d("test", "requesttcode2");
+            if (resultCode == Activity.RESULT_OK &&  data!=null) {
+                Barcode barcode = data.getParcelableExtra("barcode");
+                Log.d("barcode", barcode.displayValue);
+                RequestQueue queue = Volley.newRequestQueue(this);
+                String url = "https://fr.openfoodfacts.org/api/v0/produit/3029330003533.json";
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                // Display the first 500 characters of the response string.
+                                JsonObject jsonObject = gson.fromJson(response, JsonObject.class);
+                                Log.d("Response is: ", jsonObject.getAsJsonObject("product").get("generic_name_fr").toString());
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("ERROR ", "That didn't work !");
+                    }
+                });
+
+// Add the request to the RequestQueue.
+                queue.add(stringRequest);
+
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
