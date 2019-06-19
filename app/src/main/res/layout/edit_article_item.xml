@@ -44,14 +44,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:textStyle="bold" />
 
-    <ImageButton
+    <Button
         android:id="@+id/deleteBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:theme="@style/PrimaryFlatButton"
-        android:src="@drawable/baseline_delete_forever_black_24"
+        android:drawableTop="@drawable/baseline_delete_forever_black_24"
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent" />
 

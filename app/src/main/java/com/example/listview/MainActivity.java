@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("Test", currentShop.getArticleList().get(position).getName());
-                Snackbar.make(view, "Test  " + position, Snackbar.LENGTH_LONG).show();
+                //Snackbar.make(view, "Test  " + position, Snackbar.LENGTH_LONG).show();
                 Article a = currentShop.getArticleList().get(position);
                 if (!a.isChecked())
                     a.setChecked(true);
@@ -120,8 +120,7 @@ public class MainActivity extends AppCompatActivity {
         editFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Show other lists", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "Show other lists", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 Intent i = new Intent(MainActivity.this, EditActivity.class);
                 i.putExtra("currentShop", currentShop);
                 i.putExtra("position", shopList.indexOf(currentShop));
@@ -133,8 +132,7 @@ public class MainActivity extends AppCompatActivity {
         toPDFFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Share as PDF", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "Share as PDF", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
     }

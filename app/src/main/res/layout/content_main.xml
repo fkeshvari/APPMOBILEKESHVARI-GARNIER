@@ -16,32 +16,35 @@
         android:id="@+id/nameListTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Liste de courses 1"
-        android:radius="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
+        android:radius="50dp"
+        android:text="Liste de courses 1"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:theme="@style/PrimaryButton"
+        app:layout_constraintBottom_toTopOf="@+id/ListView"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
 
     <ListView
         android:id="@+id/ListView"
         android:layout_width="match_parent"
         android:layout_height="440dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginBottom="72dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameListTxt" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -49,4 +52,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="647dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="39dp" />
 </android.support.constraint.ConstraintLayout>

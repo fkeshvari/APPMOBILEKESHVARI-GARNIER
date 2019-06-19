@@ -35,7 +35,7 @@ public class EditArticleAdapter extends ArrayAdapter<Article>{
         EditText editTxtQte;
         Spinner txtMeasure;
         EditText editTxtName;
-        ImageButton deleteBtn;
+        Button deleteBtn;
     }
 
     public EditArticleAdapter(ArrayList<Article> data, Context context) {
