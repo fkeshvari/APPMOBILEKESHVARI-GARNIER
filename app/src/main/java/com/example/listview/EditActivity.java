@@ -2,8 +2,10 @@ package com.example.listview;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.listview.adapters.EditArticleAdapter;
+import com.example.listview.models.Article;
 import com.example.listview.models.Shop;
 
 public class EditActivity extends AppCompatActivity {
@@ -23,6 +26,7 @@ public class EditActivity extends AppCompatActivity {
     Shop currentShop;
     EditText editTxtnameList;
     int position;
+    boolean canSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +36,12 @@ public class EditActivity extends AppCompatActivity {
         manualBtn = findViewById(R.id.manualBtn);
         getSupportActionBar().setTitle("Mode Édition");
         editTxtnameList = findViewById(R.id.editTxtnameList);
+        canSave = true;
         manualBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent i = new Intent(EditActivity.this, ManualNewArticle.class);
+                startActivityForResult(i, 1);
             }
         });
         currentShop = (Shop) getIntent().getSerializableExtra("currentShop");
@@ -43,6 +49,23 @@ public class EditActivity extends AppCompatActivity {
         editTxtnameList.setText(currentShop.getName());
         adapter = new EditArticleAdapter(currentShop.getArticleList(), getApplicationContext());
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                Article article = (Article) data.getSerializableExtra("newArticle");
+                if(article!=null){
+                    currentShop.getArticleList().add(article);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+                Log.d("Test", "RESULT_CANCELED_EDIT");
+            }
+        }
     }
 
     @Override
@@ -60,7 +83,8 @@ public class EditActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_save) {
+        if (id == R.id.action_save && canSave) {
+            canSave = false;
             adapter.notifyDataSetChanged();
             Intent i = new Intent(EditActivity.this, MainActivity.class);
             currentShop.setName(editTxtnameList.getText().toString());

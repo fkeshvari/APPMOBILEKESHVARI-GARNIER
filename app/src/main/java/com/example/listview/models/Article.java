@@ -23,6 +23,7 @@ public class Article implements Serializable {
 
     }
 
+
     public String getName() {
         return name;
     }

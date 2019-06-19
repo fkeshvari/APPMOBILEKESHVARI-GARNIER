@@ -16,9 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.listview.adapters.ArticleAdapter;
 import com.example.listview.models.Article;
@@ -53,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         listView =  findViewById(R.id.ListView);
-        nameListBtn = findViewById(R.id.nameListTxt);
+        nameListBtn = findViewById(R.id.addBtn);
 
         Gson gson = new Gson();
         String json = sP.getString("shopList", "");
