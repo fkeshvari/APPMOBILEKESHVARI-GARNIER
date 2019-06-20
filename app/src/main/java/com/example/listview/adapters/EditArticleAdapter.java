@@ -81,7 +81,7 @@ public class EditArticleAdapter extends ArrayAdapter<Article>{
             Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition ? R.anim.up_from_bottom : R.anim.down_from_top));
             result.startAnimation(animation);
         }
-
+        lastPosition = position;
         viewHolder.editTxtQte.setText(String.valueOf(article.getQte()));
         viewHolder.editTxtQte.addTextChangedListener(new TextWatcher() {
             @Override
@@ -119,7 +119,12 @@ public class EditArticleAdapter extends ArrayAdapter<Article>{
             }
         });
         viewHolder.txtMeasure.setSelection(Measure.getInt(article.getMeasure()));
-        viewHolder.editTxtName.setText(article.getName());
+        /*if(article.getName().length() > 40){
+            viewHolder.editTxtName.setText(article.getName().substring(0,15)+"\n"+article.getName().substring(15,30)+"\n"+article.getName().substring(30));
+        }else if(article.getName().length()>20){
+            viewHolder.editTxtName.setText(article.getName().substring(0,15)+"\n"+article.getName().substring(15));
+        }*/
+        viewHolder.editTxtName.setText(getTenCharPerLineString(article.getName()));
         viewHolder.editTxtName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -148,6 +153,32 @@ public class EditArticleAdapter extends ArrayAdapter<Article>{
         });
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+
+        return getCount();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+
+        return position;
+    }
+
+    public String getTenCharPerLineString(String text){
+
+        String tenCharPerLineString = "";
+        while (text.length() > 14) {
+
+            String buffer = text.substring(0, 14);
+            tenCharPerLineString = tenCharPerLineString + buffer + "\n";
+            text = text.substring(14);
+        }
+
+        tenCharPerLineString = tenCharPerLineString + text.substring(0);
+        return tenCharPerLineString;
     }
 
 }

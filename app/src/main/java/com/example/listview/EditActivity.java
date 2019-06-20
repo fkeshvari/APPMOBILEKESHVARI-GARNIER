@@ -99,7 +99,7 @@ public class EditActivity extends AppCompatActivity {
                 Barcode barcode = data.getParcelableExtra("barcode");
                 Log.d("barcode", barcode.displayValue);
                 RequestQueue queue = Volley.newRequestQueue(this);
-                String url = "https://fr.openfoodfacts.org/api/v0/produit/3029330003533.json";
+                String url = "https://fr.openfoodfacts.org/api/v0/produit/"+barcode.displayValue+".json";
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
                             @Override

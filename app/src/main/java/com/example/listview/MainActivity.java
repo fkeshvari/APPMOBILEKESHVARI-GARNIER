@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.listview.adapters.ArticleAdapter;
 import com.example.listview.models.Article;
@@ -24,6 +28,7 @@ import com.example.listview.models.Shop;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -38,11 +43,13 @@ public class MainActivity extends AppCompatActivity {
     Shop currentShop;
     SharedPreferences sP;
     SharedPreferences.Editor sPEditor;
+    ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        constraintLayout = findViewById(R.id.constraintLayout);
         final Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Ma liste de courses");
         toolbar.setLogo(R.drawable.baseline_shopping_cart_white_24);
@@ -131,6 +138,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Share as PDF", Snackbar.LENGTH_LONG).show();
+                String state = Environment.getExternalStorageState();
+                if (!Environment.MEDIA_MOUNTED.equals(state)) {
+                    Log.d("Test", "okiguess");
+                }
+
+//Create a directory for your PDF
+                File pdfDir = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOCUMENTS), "MyApp");
+                if (!pdfDir.exists()){
+                    pdfDir.mkdir();
+                }
+
+
+//Then take the screen shot
+                Bitmap screen; View v1 = constraintLayout.getRootView();
+                v1.setDrawingCacheEnabled(true);
+                screen = Bitmap.createBitmap(v1.getDrawingCache());
+                v1.setDrawingCacheEnabled(false);
+
+//Now create the name of your PDF file that you will generate
+                File pdfFile = new File(pdfDir, "myPdfFile.pdf");
             }
         });
     }
